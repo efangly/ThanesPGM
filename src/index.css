@@ -51,6 +51,9 @@
   cursor: pointer;
   border-radius: 0.50rem;
 }
+.text-purple {
+  color: #ffa857 !important;
+}
 .bg-headtable {
   background-color: #333366 !important;
 }

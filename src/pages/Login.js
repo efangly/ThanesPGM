@@ -32,7 +32,7 @@ const loginFormComponent = (props)=>{
     <Helmet>
       <title>ลงชื่อเข้าใช้งาน | ThanesPGM</title>
     </Helmet>
-    <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+    <Navbar className='py-1' collapseOnSelect expand="lg" bg="dark" variant="dark">
     <Container>
       <Navbar.Brand href='/'>
         <h2>

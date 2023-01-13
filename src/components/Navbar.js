@@ -1,9 +1,9 @@
 /* eslint-disable */
 import Logo from '../utils/Images/bbb.png'
-import { withRouter } from 'react-router-dom'
+import { withRouter,Link } from 'react-router-dom'
 import { FaHome,FaUser,FaSignOutAlt,FaFilePdf,FaSyncAlt } from "react-icons/fa"
 import { BsFillPinMapFill } from "react-icons/bs"
-import { Navbar,Nav,Container,Button } from 'react-bootstrap'
+import { Navbar,Nav,Container } from 'react-bootstrap'
 import { logout } from '../utils/Authorize'
 import Swal from "sweetalert2";
 
@@ -24,21 +24,21 @@ const navbarComponent = ({history})=>{
     })
   }
   return(
-    <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark" sticky="top" >
+    <Navbar className='py-0' collapseOnSelect expand="lg" bg="dark" variant="dark" sticky="top" >
     <Container>
-        <Navbar.Brand href='/'>
+        <Link className='navbar-brand' to='/'>
         <h2>
           <img alt="" src={Logo} width="40" height="40" className="d-inline-block align-top"/>{' '}
           Thanes Programmer
         </h2>
-        </Navbar.Brand>
+        </Link>
         <Navbar.Toggle aria-controls='basic-navbar-nav' />
         <Navbar.Collapse id='basic-navbar-nav'>
           <Nav className='ms-auto' style={{ padding: 5 }}>
-            <Button href='/createreport' className='btn-create me-1 mb-1' size="sm"><FaFilePdf size={28} /> <br /> สร้างรายงาน</Button>
-            <Nav.Link href='/' align="center"><FaHome size={28} /> <br /> หน้าแรก</Nav.Link>
-            <Nav.Link href='/user' align="center"><FaUser size={28} /> <br /> จัดการผู้ใช้งาน</Nav.Link>
-            <Nav.Link href='/location' align="center"><BsFillPinMapFill size={28} /><br /> จัดการสถานที่</Nav.Link>
+            <Link to='/createreport' className='nav-link text-purple' align="center"><FaFilePdf size={28} /> <br /> สร้างรายงาน</Link>
+            <Link to='/' className='nav-link' align="center"><FaHome size={28} /> <br /> หน้าแรก</Link>
+            <Link to='/user' className='nav-link' align="center"><FaUser size={28} /> <br /> จัดการผู้ใช้งาน</Link>
+            <Link to='/location' className='nav-link' align="center"><BsFillPinMapFill size={28} /><br /> จัดการสถานที่</Link>
             <Nav.Link onClick={signout} align="center"><FaSignOutAlt size={28} /> <br /> Logout</Nav.Link>
           </Nav>
         </Navbar.Collapse>
