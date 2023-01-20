@@ -8,7 +8,7 @@ import { Button } from "react-bootstrap";
 import { FaTrashAlt } from "react-icons/fa"
 import { getToken } from "../utils/Authorize";
 import { locationDataTablecolumn } from '../utils/Columns';
-import { DeleteSwal } from '../utils/Swal';
+import { DeleteSwal,Toast } from '../utils/Swal';
 import "../styles.css";
 
 const LocationDatatable = (props)=>{
@@ -43,7 +43,10 @@ const LocationDatatable = (props)=>{
       if (result.isConfirmed){
         axios.delete(`${process.env.REACT_APP_API}/removelocation/${locID}`,
         { headers:{authorization:`Bearer ${getToken()}`} })
-        .then(response=>{ fetchData() })
+        .then(response=>{ 
+          fetchData() 
+          Toast().fire({ icon: 'success',title: 'ลบสถานที่ปฏิบัติงานสำเร็จ' })
+        })
         .catch(err=>{
           if(err.response.statusText == "Unauthorized"){ window.location = "/login" }
           else{ Swal.fire('Errors',err.response.data.error,'error') }

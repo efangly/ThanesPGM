@@ -2,12 +2,12 @@
 import { useState,useEffect,createContext } from "react"
 import { FaTrashAlt } from "react-icons/fa"
 import { Container,Row,Col,Card,Button } from 'react-bootstrap'
-import { Helmet } from "react-helmet";
-import { getUserInfo,getToken,getUserId,getStatus,getAdmin } from "../utils/Authorize";
+import { Helmet } from "react-helmet"
+import { getUserInfo,getToken,getUserId,getStatus,getAdmin } from "../utils/Authorize"
 import { Toast,DeleteSwal } from '../utils/Swal'
-import axios from "axios";
-import Swal from "sweetalert2";
-import NavbarComponent from '../components/Navbar'
+import axios from "axios"
+import Swal from "sweetalert2"
+import Navbar from '../components/Navbar'
 import ExportModal from "../components/ExportModal"
 import PlanDatatable from '../components/PlanDatatable'
 import SwitchButton from "../components/SwitchButton"
@@ -43,6 +43,7 @@ const Main = ()=>{
           axios.delete(`${process.env.REACT_APP_API}/removeplan/${planidlist}`,
           { headers: {authorization:`Bearer ${getToken()}`} })
           .then(response=>{
+            setSelectedRows([])
             fetchData()
             Toast().fire({ icon: 'success',title: 'ลบรายการสำเร็จ' })
           })
@@ -65,7 +66,7 @@ const Main = ()=>{
     <Helmet>
       <title>หน้าแรก | {' '+getUserInfo().split(",",1)}</title>
     </Helmet>
-    <NavbarComponent />
+    <Navbar />
     <Container style={{ padding: 5, marginTop: 1}}>
       <Card className='bg-incard'>
         <Card.Header className='bg-cardheader text-white'>

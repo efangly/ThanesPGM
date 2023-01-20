@@ -4,10 +4,10 @@ import { Container,Row,Col,Card } from 'react-bootstrap'
 import { useState } from "react";
 import { Helmet } from "react-helmet";
 import '../index.css'
-import LocDatatableComponent from '../components/LocationDatatable'
+import LocDatatable from '../components/LocationDatatable'
 import AddLocationModal from "../components/AddLocationModal";
-import NavbarComponent from '../components/Navbar'
-import { getUserInfo} from "../utils/Authorize"
+import Navbar from '../components/Navbar'
+import { getUserInfo } from "../utils/Authorize"
 
 const Location = ()=>{
   const [addlocal,setAddlocal] = useState(false)
@@ -20,7 +20,7 @@ const Location = ()=>{
     <Helmet>
       <title>จัดการสถานที่ปฏิบัติงาน | {' '+getUserInfo().split(",",1)}</title>
     </Helmet>
-    <NavbarComponent />
+    <Navbar />
     <Container style={{ padding: 5, marginTop: 5}}>
     <Row>  
       <Col sm={2}>
@@ -39,7 +39,7 @@ const Location = ()=>{
           </Card.Header>
           <Card.Body>
             <Row>
-              <LocDatatableComponent refresh={addlocal} updaterefresh={updateDataTable} />
+              <LocDatatable refresh={addlocal} updaterefresh={updateDataTable} />
             </Row>
           </Card.Body>
         </Card>

@@ -5,14 +5,15 @@ import Swal from "sweetalert2";
 import { FaRegEdit,FaCalendarAlt,FaStar,FaUserFriends,FaSave } from "react-icons/fa";
 import { BiMap } from "react-icons/bi";
 import { Helmet } from "react-helmet";
-import { Container,Row,Col,Card,Form,Button } from "react-bootstrap";
+import { Container,Row,Col,Card,Form,Button,Spinner } from "react-bootstrap";
 import { useState,useEffect } from "react";
-import NavbarComponent from '../components/Navbar';
+import Navbar from '../components/Navbar';
 import { getToken,getUserId,getUserInfo,getStatus,getAdmin } from "../utils/Authorize";
 import AddLocationModal from '../components/AddLocationModal';
 import '../index.css';
 
 const CreateReport = ()=>{
+  const [isLoading, setLoading] = useState(false)
   const [locationLists,setlocationList] = useState([])
   const [buddyName,setBuddyName] = useState([])
   const [addlocal,setAddlocal] = useState(false)
@@ -39,16 +40,18 @@ const CreateReport = ()=>{
   }
   const submitForm=(e)=>{
     e.preventDefault();
+    setLoading(true)
     axios.post(`${process.env.REACT_APP_API}/createplan`,
-    {userID,date_start,date_end,travel_money,hotel_money,other_money,location,objective,buddy},
-    { headers:{ authorization:`Bearer ${getToken()}` }
-    })
-    .then(response=>{
+      {userID,date_start,date_end,travel_money,hotel_money,other_money,location,objective,buddy},
+      { headers:{ authorization:`Bearer ${getToken()}` } }
+    ).then(response=>{
       setReport({...report,date_start:"",date_end:"",travel_money:"",hotel_money:"",other_money:"",location:"",objective:"",buddy:""});
       Swal.fire('Completed','บันทึกข้อมูลเรียบร้อย','success').then(res=>{
+        setLoading(false)
         window.location = "/"
       })
     }).catch(err=>{
+      setLoading(false)
       if(err.response.statusText == "Unauthorized"){
         window.location = "/login"
       }
@@ -84,7 +87,6 @@ const CreateReport = ()=>{
   }
   useEffect(()=>{
     getBuddy()
-    console.log(userID)
   },[])
   useEffect(()=>{
     fetchData()
@@ -107,7 +109,7 @@ const CreateReport = ()=>{
     <Helmet>
       <title>เขียนเอกสารรายงาน | {' '+getUserInfo().split(",",1)}</title>
     </Helmet>
-    <NavbarComponent />
+    <Navbar />
     <Container style={{ padding: 5, marginTop: 5}}>
     <Row>
       <Col md={2}>
@@ -174,7 +176,10 @@ const CreateReport = ()=>{
           </Row>
           <Row>
             <Col md={12}>
-              <Button type="submit" className='registerbtn'><FaSave /> บันทึกข้อมูล</Button>
+              <Button type="submit" className='registerbtn' disabled={isLoading}>
+                {isLoading ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> : <FaSave />}
+                {isLoading ? ' กำลังบันทึก…' : ' บันทึกข้อมูล'}
+              </Button>
             </Col>
           </Row>
           </Form>

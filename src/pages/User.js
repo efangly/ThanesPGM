@@ -1,27 +1,42 @@
 /* eslint-disable */
 import { FaUser } from "react-icons/fa"
+import axios from "axios";
 import { Container,Row,Col,Card } from 'react-bootstrap'
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { Helmet } from "react-helmet";
-import { getUserInfo } from "../utils/Authorize";
-import UserDatatableComponent from '../components/UserDatatable';
-import NavbarComponent from '../components/Navbar';
+import { getUserInfo,getUserId,getToken } from "../utils/Authorize";
+import UserDatatable from '../components/UserDatatable';
+import Navbar from '../components/Navbar';
 import AddUserModal from '../components/AddUserModal'
 import '../index.css'
 import "../styles.css";
 
 const User = ()=>{
-  const [update,setUpdate] = useState(false)
-  const updateUser=(params)=>{
-    setUpdate(params)
+  const [User,setUser] = useState([])
+  const fetchData=()=>{
+    axios.get(`${process.env.REACT_APP_API}/userlistnoself/${getUserId()}`,
+    { headers:{ authorization:`Bearer ${getToken()}` }})
+    .then(response=>{
+      setUser(response.data)
+    })
+    .catch(err=>{
+      if(err.response.statusText == "Unauthorized"){
+        window.location = "/login"
+      }
+      else{ Swal.fire('Errors',err.response.data.error,'error') }
+    })
   }
+
+  useEffect(()=>{
+    fetchData()
+  },[])
 
   return(
     <>
     <Helmet>
       <title>จัดการผู้ใช้งาน | {' '+getUserInfo().split(",",1)}</title>
     </Helmet>
-    <NavbarComponent />
+    <Navbar />
     <Container style={{ padding: 5, marginTop: 5}}>
     <Row>  
       <Col md={2}>
@@ -34,13 +49,13 @@ const User = ()=>{
                 <h4 style={{ textAlign: 'left'}}><FaUser /> จัดการผู้ใช้งาน</h4>
               </Col>
               <Col md={7} align="right">
-                <AddUserModal adduser={updateUser} />
+                <AddUserModal update={fetchData} />
               </Col>
             </Row>
           </Card.Header>
           <Card.Body>
             <Row>
-              <UserDatatableComponent update={update} returnstatus={updateUser} />
+              <UserDatatable data={User} update={fetchData} />
             </Row>
           </Card.Body>
         </Card>

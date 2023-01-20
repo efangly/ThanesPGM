@@ -1,7 +1,7 @@
 /* eslint-disable */
 import Logo from '../utils/Images/bbb.png'
 import { withRouter,Link } from 'react-router-dom'
-import { FaHome,FaUser,FaSignOutAlt,FaFilePdf,FaSyncAlt } from "react-icons/fa"
+import { FaHome,FaUser,FaSignOutAlt,FaFilePdf } from "react-icons/fa"
 import { BsFillPinMapFill } from "react-icons/bs"
 import { Navbar,Nav,Container } from 'react-bootstrap'
 import { logout } from '../utils/Authorize'

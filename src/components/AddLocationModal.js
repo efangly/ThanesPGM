@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { FaUserPlus } from "react-icons/fa"
 import { BiMap } from "react-icons/bi";
-import { Form,Modal,Button } from 'react-bootstrap'
+import { Form,Modal,Button,Spinner } from 'react-bootstrap'
 import { useState } from "react";
 import Swal from "sweetalert2";
 import axios from "axios";
@@ -10,6 +10,7 @@ import { getToken} from "../utils/Authorize"
 import { Toast } from "../utils/Swal";
 
 const AddLocationModal = (props)=>{
+  const [isLoading, setLoading] = useState(false)
   const [Location,setLocation] = useState({locname:"",price:""})
   const {locname,price} = Location;
   const inputValue = name=>event=>{
@@ -21,13 +22,16 @@ const AddLocationModal = (props)=>{
 
   const submitForm=(e)=>{
     e.preventDefault();
+    setLoading(true)
     axios.post(`${process.env.REACT_APP_API}/createlocation`,{locname,price},
     { headers: {authorization:`Bearer ${getToken()}`} })
     .then(response=>{
+      setLoading(false)
       Toast().fire({ icon: 'success',title: 'เพิ่มสถานที่ปฏิบัติงานสำเร็จ' })
       props.updateadd(true)
       setLocation({...Location,locname:"",price:""});
     }).catch(err=>{
+      setLoading(false)
       if(err.response.statusText == "Unauthorized"){
         window.location = "/login"
       }
@@ -52,8 +56,9 @@ const AddLocationModal = (props)=>{
         </Form>
       </Modal.Body>
       <Modal.Footer className='bg-cardheader text-white'>
-        <Button type="submit" className='btn-create' onClick={handleClose}>
-          <FaUserPlus /> เพิ่มสถานที่ทำงาน
+        <Button type="submit" className='btn-create' onClick={handleClose} disabled={isLoading}>
+          {isLoading ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> : <FaUserPlus />}
+          {isLoading ? ' กำลังบันทึก…' : ' เพิ่มสถานที่ทำงาน'}
         </Button>
       </Modal.Footer>
       </Form>

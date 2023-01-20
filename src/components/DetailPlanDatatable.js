@@ -3,7 +3,7 @@ import DataTable from 'react-data-table-component';
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useState,useEffect,useCallback } from "react";
-import { Button,Modal,Form,Row,Col } from 'react-bootstrap';
+import { Button,Modal,Form,Row,Col,Spinner } from 'react-bootstrap';
 import { FaRegEdit } from "react-icons/fa";
 import { getToken} from "../utils/Authorize";
 import { DetailPlanDataTablecolumn } from '../utils/Columns';
@@ -25,6 +25,7 @@ const DetailPlanDatatable = (props)=>{
     maxWidth: "20px",
     center: true
   })
+  const [isLoading, setLoading] = useState(false)
   const [DtPlan,setDtPlan] = useState([])
   const [editplan,setEditplan] = useState({detailID:"",travel_money: 0,hotel_money: 0,other_money: 0,location:"",objective:"",buddy:""})
   const {detailID,travel_money,hotel_money,other_money,location,objective,buddy} = editplan
@@ -69,14 +70,17 @@ const DetailPlanDatatable = (props)=>{
 
   const submitForm=(e)=>{
     e.preventDefault();
+    setLoading(true)
     axios.put(`${process.env.REACT_APP_API}/updatedtplan/${detailID}`,
     {travel_money,hotel_money,other_money,location,objective,buddy},
     { headers:{authorization:`Bearer ${getToken()}`} })
     .then(response=>{
       Toast().fire({ icon: 'success',title: 'แก้ไขข้อมูลสำเร็จ' })
       fetchData()
+      setLoading(false)
       setEditplan({...editplan,detailID:"",travel_money: 0,hotel_money: 0,other_money: 0,location:"",objective:"",buddy:""});})
     .catch(err=>{
+      setLoading(false)
       if(err.response.statusText == "Unauthorized"){ window.location = "/login" }
       else{ Swal.fire('Errors',err.response.data.error,'error') }
     })
@@ -126,8 +130,9 @@ const DetailPlanDatatable = (props)=>{
           </Form>
         </Modal.Body>
         <Modal.Footer className='bg-cardheader text-white'>
-          <Button type="submit" className='btn-create' onClick={handleClose}>
-            <FaRegEdit size={24} /> แก้ไข
+          <Button type="submit" className='btn-create' onClick={handleClose} disabled={isLoading}>
+            {isLoading ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> : <FaRegEdit size={20} />}
+            {isLoading ? ' Saving…' : ' แก้ไข'}
           </Button>
         </Modal.Footer>
         </Form>

@@ -3,11 +3,12 @@ import { useState } from "react";
 import { BsFillGearFill } from "react-icons/bs";
 import { FaTrashAlt } from "react-icons/fa"
 import { Container,Row,Col,Card,Button } from 'react-bootstrap'
-import { getToken} from "../utils/Authorize";
+import { getToken,getUserInfo } from "../utils/Authorize"
+import { Helmet } from "react-helmet"
 import axios from "axios";
 import Swal from "sweetalert2";
 import DetailPlanDatatable from '../components/DetailPlanDatatable';
-import NavbarComponent from '../components/Navbar';
+import Navbar from '../components/Navbar';
 import { DeleteSwal } from "../utils/Swal";
 import '../index.css'
 
@@ -34,6 +35,7 @@ const DetailPlan = (props)=>{
           { headers:{authorization:`Bearer ${getToken()}`}
           }).then(response=>{
             deleteStatus(true)
+            setSelectedRows([])
             Toast.fire({icon: 'success',title: 'ลบรายการสำเร็จ'})
           }).catch(err=>{
             if(err.response.statusText == "Unauthorized"){ window.location = "/login" }
@@ -45,7 +47,10 @@ const DetailPlan = (props)=>{
   }
   return(
     <>
-    <NavbarComponent />
+    <Helmet>
+      <title>แก้ไข | {' '+getUserInfo().split(",",1)}</title>
+    </Helmet>
+    <Navbar />
     <Container style={{ padding: 5, marginTop: 5}}>
       <Card className='bg-incard'>
         <Card.Header className='bg-cardheader text-white'>
